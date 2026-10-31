@@ -1,0 +1,174 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="{{ name }}'s Portfolio — {{ course }} student skilled in Python, Django, and web development.">
+    <link rel="stylesheet" href="{% static 'home/style.css' %}?v=4">
+    <title>{{ name }}'s Portfolio</title>
+
+    
+</head>
+
+<body>
+
+    <!-- Floating Neon Blobs -->
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+    <div class="blob blob-4"></div>
+
+    <div class="container">
+        
+<!-- ===== Login Status ===== -->
+<div style="text-align: center; margin-bottom: 20px;">
+
+    {% if user.is_authenticated %}
+
+        <h3>👋 Welcome, {{ user.username }}</h3>
+
+        <a href="{% url 'logout' %}" class="back-link">
+            🚪 Logout
+        </a>
+
+    {% else %}
+
+        <a href="{% url 'login' %}" class="back-link">
+            🔐 Login
+        </a>
+
+        &nbsp;&nbsp;
+
+        <a href="{% url 'register' %}" class="back-link">
+            📝 Register
+        </a>
+
+    {% endif %}
+
+</div>
+        
+        <!-- ===== Hero ===== -->
+        <section class="hero fade-in">
+            <div class="avatar">{{ name|first }}</div>
+            <h1>{{ name }}</h1>
+            <p class="tagline">{{ tagline }}<span class="cursor"></span></p>
+        </section>
+
+        
+
+        <!-- ===== About Me ===== -->
+        <div class="card fade-in delay-2">
+            <h2><span class="icon">✦</span> About Me</h2>
+            <p>
+                Hello! I'm <strong>{{ name }}</strong>, currently pursuing
+                <strong>{{ course }}</strong>. I'm passionate about building
+                clean, modern web applications and love exploring new
+                technologies. Always learning, always coding.
+            </p>
+        </div>
+
+        <!-- ===== Skills (Bars) ===== -->
+        <div class="card fade-in delay-3">
+            <h2><span class="icon">⚡</span> Skills</h2>
+            <ul class="skill-bars">
+                {% for skill in skills %}
+                <li class="skill-item">
+                    <div class="skill-label">
+                        <span>{{ skill.name }}</span>
+                        <span>{{ skill.level }}%</span>
+                    </div>
+                    <div class="skill-track">
+                        <div class="skill-fill" style="--fill: {{ skill.level }}%;"></div>
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <!-- ===== Tech Stack (Pills) ===== -->
+        <div class="card fade-in delay-4">
+            <h2><span class="icon">🛠</span> Tech Stack</h2>
+            <ul class="pills">
+                {% for tech in tech_stack %}
+                <li style="animation-delay: {{ forloop.counter }}00ms;">{{ tech }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+      <!-- ===== Projects ===== -->
+<!-- ===== Projects ===== -->
+<div class="card fade-in delay-5">
+    <h2><span class="icon">🚀</span> My Projects</h2>
+
+    <div class="projects-grid">
+
+        {% for project in projects %}
+        <div class="project-card">
+
+            <h3>{{ project.name }}</h3>
+
+            <p class="project-description">
+                {{ project.description }}
+            </p>
+
+            <div class="technology">
+                {{ project.technology }}
+            </div>
+
+            <div class="project-actions">
+                <a href="{% url 'edit_project' project.id %}" class="btn-edit">✏️ Edit</a>
+                <form method="POST"
+      action="{% url 'delete_project' project.id %}"
+      style="display: inline;"
+      onsubmit="return confirm('Are you sure you want to delete this project?');">
+
+    {% csrf_token %}
+
+    <button type="submit" class="btn-delete">
+        🗑️ Delete
+    </button>
+
+</form>
+            </div>
+
+        </div>
+
+        {% empty %}
+
+        <p>No projects available.</p>
+
+        {% endfor %}
+
+    </div>
+</div>
+        <!-- ===== Footer ===== -->
+        <footer class="fade-in delay-6">
+            <p>Made with <span class="heart">♥</span> by {{ name }}</p>
+            <div class="social-links">
+                <a href="#" title="GitHub">⌨</a>
+                <a href="#" title="LinkedIn">in</a>
+                <a href="#" title="Email">✉</a>
+            </div>
+        </footer>
+
+    </div>
+
+    <script>
+        // --- Animate skill bars to their target width ---
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.skill-fill').forEach(bar => {
+                const target = bar.style.getPropertyValue('--fill');
+                if (target) {
+                    // Wait for the fillBar animation delay to finish, then set width
+                    const delay = parseFloat(bar.style.animationDelay) || 0;
+                    setTimeout(() => { bar.style.width = target; }, delay);
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>

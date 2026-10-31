@@ -1,0 +1,53 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'home/style.css' %}?v=4">
+    <title>Edit Project</title>
+</head>
+
+<body>
+
+    <!-- Floating Neon Blobs -->
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+
+    <div class="container">
+
+        <div class="card fade-in" style="max-width: 550px; margin: 60px auto;">
+
+            <h2><span class="icon">✏️</span> Edit Project</h2>
+
+            {% if message %}
+            <div class="form-message success">
+                ✅ {{ message }}
+            </div>
+            {% endif %}
+
+            <form method="POST" class="styled-form">
+                {% csrf_token %}
+
+                {% for field in form %}
+                <div class="form-group">
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+                </div>
+                {% endfor %}
+
+                <button type="submit" class="btn-submit btn-update">
+                    💾 Update Project
+                </button>
+            </form>
+
+            <a href="{% url 'home' %}" class="back-link">← Back to Home</a>
+
+        </div>
+
+    </div>
+
+</body>
+</html>
